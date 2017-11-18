@@ -1,0 +1,110 @@
+<html>
+        <head>
+          <title>The Human Body</title>
+          <link rel="stylesheet" type="text/css" href="./styles/styles.css"/>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        </head>
+        
+        <body>
+          <span class="project-title">
+            <span class="project-title-text">
+              The Human Body
+            </span>
+          </span>
+          <span class="arrow-container">
+              <span class="right-button-container">
+                  <button class="right-button button" type="button"><span class="right-icon button-icon"></span></button>
+              </span>
+              <span class="left-button-container">
+                  <button class="left-button button" type="button"><span class="left-icon button-icon"></span></button>
+              </span>
+          </span>
+
+          <span class="object-container">
+            <span class="content-container">
+                  <span class="object-name">
+                    
+                  </span>
+                  <span class="object-description">
+                      
+                  </span>
+            </span>
+            <span  class="action-button-container">
+              <span class="action-button-span">
+                  
+              </span>
+            </span>
+          </span>
+
+          <iframe id="ar-iframe" src="models.html"></iframe>
+          
+          <script>
+            window.onload = function () {  
+                var objectJSON = {
+                      "objects":[
+                        {
+                          "name" : "Heart",
+                          "description" : "The heart is a muscular organ in humans and other animals, which pumps blood through the blood vessels of the circulatory system.",
+                          "buttonText" : "Start Beating",
+                          "buttonMessage" : "heart-animate",
+                          "clickMessage" : "heart" 
+                        },
+                        {
+                          "name" : "Brain",
+                          "description" : "The brain serves as the center of the nervous system in all vertebrate and most invertebrate animals. The brain is the most complex organ in a vertebrate's body.",
+                          "clickMessage" : "brain" 
+                        },
+                        {
+                          "name" : "Human Skull",
+                          "description" : "The skull is a bony structure that forms of the head in most vertebrates. The skull is composed of two parts: the cranium and the mandible.",
+                          "buttonText": "Working Of Jaw",
+                          "buttonMessage" : "skull-animate",
+                          "clickMessage" : "skull" 
+                        }
+                      ],
+                };
+
+                var iframe = document.querySelector("#ar-iframe").contentWindow,
+                    objectName = document.querySelector(".object-name"),
+                    objectDescription = document.querySelector(".object-description"),
+                    rightButton = document.querySelector(".right-button"),
+                    leftButton = document.querySelector(".left-button");
+                
+                var num = -1;
+                objectRender("right");
+
+                function objectRender(name){
+                  if (name == "right") {
+                    if(num < 2)num++;
+                    else num = 0;
+                  }
+                  else{
+                    if (num > 0)num--;
+                    else num = 2;
+                  }
+
+                  document.querySelector(".action-button-span").innerHTML = "";
+                  objectName.innerHTML = objectJSON.objects[num].name;
+                  objectDescription.innerHTML = objectJSON.objects[num].description;
+                  
+                  if (objectJSON.objects[num].buttonText){
+                    var button = document.createElement("button");
+                    button.className = "button"
+                    button.innerHTML = objectJSON.objects[num].buttonText;
+                    button.addEventListener("click", function(){
+                      iframe.postMessage(objectJSON.objects[num].buttonMessage , window.location.href);
+                    });
+                    document.querySelector(".action-button-span").appendChild(button);
+                  }
+                  iframe.postMessage(objectJSON.objects[num].clickMessage, window.location.href);
+                  return false;
+                };
+
+                rightButton.addEventListener("click", function(){objectRender("right")}, false);
+                leftButton.addEventListener("click", function(){objectRender("left")}, false);
+
+              };
+          </script>
+        </body>   
+</html>

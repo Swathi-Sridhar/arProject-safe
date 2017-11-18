@@ -1,0 +1,158 @@
+<html>
+    <head>
+      <script src="aframe.min.js"></script>
+      <script src="aframe-ar.js"></script>
+    </head>
+    <body style='margin : 0px; overflow: hidden;'>
+      
+        <!-- For AR -->
+        <a-scene embedded arjs='sourceType: webcam;' vr-mode-ui="enabled: false">
+
+        <!-- For VR -->  
+        <!-- <a-scene vr-mode-ui="enabled: false"> -->
+
+          <a-assets>
+              <a-asset-item id="heart" src="./models/heart/heart.gltf"></a-asset-item>
+              <a-asset-item id="brain" src="./models/brain/brain.gltf"></a-asset-item>
+              <a-asset-item id="skullTop" src="./models/skullTop/Skull.gltf"></a-asset-item>
+              <a-asset-item id="skullBottom" src="./models/skullBottom/Skull.gltf"></a-asset-item>
+          </a-assets>
+          
+          <a-marker preset='hiro'>  
+            
+              <a-entity 
+                id="heart-container"
+                position="0 0.2 0" 
+                scale="0.2 0.2 0.2" 
+                rotation="0 0 0"
+                gltf-model="#heart"
+                visible="false"
+              >
+                <a-animation 
+                  easing="linear" 
+                  attribute="rotation" 
+                  dur="10000" 
+                  to="0 360 0" 
+                  repeat="indefinite">
+                </a-animation>
+              
+              </a-entity>
+
+              <a-entity 
+              id="brain-container"
+              position="0 0 0" 
+              scale="0.5 0.5 0.5" 
+              rotation="0 0 0"
+              gltf-model="#brain"
+              visible="false"
+            >
+              <a-animation 
+                easing="linear" 
+                attribute="rotation" 
+                dur="10000" 
+                to="0 360 0" 
+                repeat="indefinite">
+              </a-animation>
+            
+            </a-entity>
+
+          <a-entity
+            id="skull-container"  
+            position="0 0 0" 
+            scale="1 1 1" 
+            visible="false"
+          >
+            
+            <a-entity 
+            scale="0.5 0.5 0.5" 
+            rotation="0 0 0"
+            gltf-model="#skullTop"
+          >      
+          </a-entity>
+          <a-entity 
+          id="skull-bottom-model"
+          scale="0.5 0.5 0.5" 
+          rotation="0 0 0"
+          gltf-model="#skullBottom"
+        >      
+        </a-entity>
+              <a-animation 
+                easing="linear" 
+                attribute="rotation" 
+                dur="10000" 
+                to="0 360 0" 
+                repeat="indefinite"
+              >
+              </a-animation>
+          </a-entity>
+
+          </a-marker>
+
+          <!-- For AR -->
+          <a-entity camera></a-entity>
+
+          <!-- For VR -->
+          <!-- <a-entity camera look-controls></a-entity> -->
+
+          <!-- For VR -->
+          <!-- <a-sky color="#fff" ></a-sky> -->
+
+      </a-scene>
+
+      <script>
+        function displayMessage (evt) {
+          var message,
+          heartContainer = document.querySelector("#heart-container"),
+          brainContainer = document.querySelector("#brain-container"),
+          skullContainer = document.querySelector("#skull-container"),
+          skullBottom = document.querySelector("#skull-bottom-model");
+
+        
+
+          switch (evt.data){
+            case "heart" : brainContainer.setAttribute("visible", "false");
+                           skullContainer.setAttribute("visible", "false");
+                           heartContainer.setAttribute("visible", "true");
+                           break;
+            case "heart-animate": var animateBeat = document.createElement("a-animation");
+                                  animateBeat.setAttribute('attribute', 'scale');
+                                  animateBeat.setAttribute('easing', `linear`);
+                                  animateBeat.setAttribute('direction', `alternate`);
+                                  animateBeat.setAttribute('dur', 400);
+                                  animateBeat.setAttribute('from', `0.2 0.2 0.2`);
+                                  animateBeat.setAttribute('to', `0.225 0.225 0.225`);
+                                  animateBeat.setAttribute('repeat', `indefinite`);
+                                  heartContainer.appendChild(animateBeat);
+                                  break;
+            case "skull-animate": var animateSkull = document.createElement("a-animation");
+                                  animateSkull.setAttribute('attribute', 'rotation');
+                                  animateSkull.setAttribute('easing', `linear`);
+                                  animateSkull.setAttribute('direction', `alternate`);
+                                  animateSkull.setAttribute('dur', 400);
+                                  animateSkull.setAttribute('from', `0 0 0`);
+                                  animateSkull.setAttribute('to', `20 0 0`);
+                                  animateSkull.setAttribute('repeat', `indefinite`);
+                                  skullBottom.appendChild(animateSkull);
+                                  break;
+            case "brain" : heartContainer.setAttribute("visible", "false");
+                           skullContainer.setAttribute("visible", "false");
+                           brainContainer.setAttribute("visible", "true");
+                           break;
+
+            case "skull" : brainContainer.setAttribute("visible", "false");
+                            heartContainer.setAttribute("visible", "false");
+                            skullContainer.setAttribute("visible", "true");
+            break;
+          }
+        }
+
+        if (window.addEventListener) {
+          window.addEventListener("message", displayMessage, false);
+        }
+        else {
+          window.attachEvent("onmessage", displayMessage);
+        }
+      </script>
+    </body>
+    
+</html>
